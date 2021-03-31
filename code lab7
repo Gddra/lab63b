@@ -1,0 +1,42 @@
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+
+int cnt = 0;
+
+void setup()
+{
+	Serial.begin(115200);
+	WiFi.mode(WIFI_STA);
+	WiFi.disconnect();
+  pinMode(0, INPUT);  //รับสัญญานจากตัวรับแสง
+  pinMode(2, OUTPUT); //ต่อกับไฟ LED สีแดง
+	delay(100);
+	Serial.println("\n\n\n");
+}
+
+void loop()
+{
+  int val = digitalRead(0);
+  while(val==1) {
+              Serial.println("========== Searching for Wifi ===========");
+              int n = WiFi.scanNetworks();
+              if(n == 0) {
+                Serial.println(" NETWORK NOT FOUND (Please check your network) ");
+              } else {
+                for(int i=0; i<n; i++) {
+                  Serial.print(i + 1);
+                  Serial.print(": ");
+                  Serial.print(WiFi.SSID(i));
+                  Serial.print(" (");
+                  Serial.print(WiFi.RSSI(i));
+                  Serial.println(")");
+                  Serial.print(WiFi.channel(i));
+                  delay(10);
+          }
+        }
+        Serial.println("\n\n");
+        delay(5 * 1000);
+     }
+  digitalWrite(2, HIGH); //แสดงไฟสถานะ LED สีแดงเปิด
+}
+
